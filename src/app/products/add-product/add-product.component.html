@@ -1,8 +1,10 @@
 <div class="header d-flex justify-content-center align-items-center mt-4">
-  <h3 class="fw-bold">Create New Product</h3>
+  <h3 class="fw-bold">
+    {{ isEditMode ? "Update Product" : "Create New Product" }}
+  </h3>
 </div>
 
-<form class="mt-4">
+<form class="mt-4" (ngSubmit)="onSubmit()">
   <!-- Name Input -->
   <div class="mb-3">
     <label for="productName" class="form-label">Name</label>
@@ -11,6 +13,8 @@
       class="form-control"
       id="productName"
       placeholder="Enter product name"
+      [(ngModel)]="product.name"
+      name="name"
     />
   </div>
 
@@ -22,14 +26,21 @@
       id="productDescription"
       rows="3"
       placeholder="Enter product description"
+      [(ngModel)]="product.description"
+      name="description"
     ></textarea>
   </div>
 
   <!-- Category Dropdown -->
   <div class="mb-3">
     <label for="productCategory" class="form-label">Category</label>
-    <select class="form-select" id="productCategory">
-      <option selected>Select a category</option>
+    <select
+      class="form-select"
+      id="productCategory"
+      [(ngModel)]="product.category"
+      name="category"
+    >
+      <option selected [ngValue]="">Select a category</option>
       <option *ngFor="let category of categories" [value]="category">
         {{ category }}
       </option>
@@ -44,6 +55,8 @@
       class="form-control"
       id="productQuantity"
       placeholder="Enter quantity"
+      [(ngModel)]="product.quantity"
+      name="quantity"
     />
   </div>
 
@@ -56,16 +69,27 @@
       class="form-control"
       id="productUnitPrice"
       placeholder="Enter unit price"
+      [(ngModel)]="product.unitPrice"
+      name="unitPrice"
     />
   </div>
+
   <div class="mb-3">
     <label for="productCreateDate" class="form-label">Create Date</label>
-    <input type="date" class="form-control" id="productCreateDate" />
+    <input
+      type="date"
+      class="form-control"
+      id="productCreateDate"
+      [(ngModel)]="formattedCreateDate"
+      name="createdAt"
+    />
   </div>
 
   <!-- Submit Button -->
   <hr class="mt-2 mb-4" />
   <div class="d-flex justify-content-end">
-    <button type="submit" class="btn btn-primary">Create Product</button>
+    <button type="submit" class="btn btn-primary">
+      {{ isEditMode ? "Update Product" : "Create Product" }}
+    </button>
   </div>
 </form>

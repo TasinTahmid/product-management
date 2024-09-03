@@ -11,6 +11,8 @@
     type="text"
     class="form-control"
     placeholder="Search products by name..."
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="filterProducts()"
   />
 </div>
 
@@ -34,10 +36,13 @@
       <td>{{ calculateTotal(product) | currency : "USD" }}</td>
       <td>
         <button class="btn btn-link p-0">
-          <i class="bi bi-pencil-square"></i>
+          <i
+            class="bi bi-pencil-square"
+            (click)="navigateToUpdateProduct(product.id)"
+          ></i>
         </button>
         <button class="btn btn-link p-0 ms-2" style="color: red">
-          <i class="bi bi-trash"></i>
+          <i class="bi bi-trash" (click)="delelteProduct(product.id)"></i>
         </button>
       </td>
     </tr>
