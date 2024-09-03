@@ -1,0 +1,45 @@
+.custom-navbar {
+  background-color: #007bff; /* Background color for navbar */
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+  color: white; /* Text color for brand and nav links */
+}
+
+.custom-navbar .nav-link.active,
+.custom-navbar .nav-link:hover {
+  color: #d4d4d4; /* Lighter color for active and hover states */
+}
+
+/* Ensure navbar items are in a row and don't wrap */
+.custom-navbar .navbar-nav {
+  flex-direction: row; /* Ensure items are in a row */
+}
+
+.custom-navbar .navbar-nav .nav-item {
+  margin: 0 10px; /* Space between nav items */
+}
+
+@media (max-width: 990px) {
+  .custom-navbar .navbar-nav {
+    flex-wrap: nowrap; /* Prevent items from wrapping */
+  }
+
+  .custom-navbar .navbar-collapse {
+    flex-basis: auto; /* Adjust flex basis to prevent collapsing */
+    display: flex; /* Ensure flex display */
+    justify-content: center; /* Center items horizontally */
+  }
+}
+
+.logo {
+  font-family: "Cinzel", "Arial", sans-serif; /* Use a custom font or web-safe font */
+  font-size: 2rem; /* Adjust size as needed */
+  font-weight: bold;
+  color: #bfd7f0; /* Choose a color that fits your design */
+  text-transform: uppercase; /* Makes the text uppercase */
+  letter-spacing: 2px; /* Adds space between letters */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow effect */
+  text-decoration: none; /* Removes underline from link */
+}

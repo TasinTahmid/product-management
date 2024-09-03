@@ -1,0 +1,45 @@
+.bottom-controls {
+  padding: 0px;
+  border-top: 1px solid #ddd; /* Optional: Adds a border above the controls */
+}
+
+.rows-per-page {
+  display: flex;
+  align-items: center;
+}
+
+.rows-per-page label {
+  margin-right: 10px; /* Adjust spacing between label and input */
+}
+
+.custom-width {
+  width: 70px; /* Adjust width as needed */
+}
+
+.ml-4 {
+  margin-left: 1.5rem; /* Adjust margin-left to your preference */
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+}
+
+/* .pagination .page-item {
+  margin: 0 5px;
+} */
+.page-link {
+  box-shadow: none;
+}
+
+.page-link:focus {
+  box-shadow: none;
+}
+
+.page-item.active .page-link {
+  box-shadow: none;
+}
+
+.pagination .page-link {
+  text-decoration: none;
+}
