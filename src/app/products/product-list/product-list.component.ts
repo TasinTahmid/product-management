@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../product.model';
 import { ProductService } from '../product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -10,10 +11,10 @@ import { ProductService } from '../product.service';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
   products: Product[] = [];
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
     this.products = this.productService.getProducts();
@@ -21,5 +22,9 @@ export class ProductListComponent {
 
   calculateTotal(product: Product): number {
     return product.quantity * product.unitPrice;
+  }
+
+  navigateToNewProduct(): void {
+    this.router.navigate(['/products/new']);
   }
 }
