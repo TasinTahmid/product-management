@@ -1,76 +1,113 @@
-<div class="header d-flex justify-content-between align-items-center mt-4">
-  <h2 class="fw-bold">Products</h2>
-  <button class="btn btn-success" (click)="navigateToNewProduct()">
-    Create Product
-  </button>
-</div>
-<hr class="mt-2 mb-4" />
-
-<div class="search-bar mb-4">
-  <input
-    type="text"
-    class="form-control"
-    placeholder="Search products by name..."
-    [(ngModel)]="searchTerm"
-    (ngModelChange)="filterProducts()"
-  />
-</div>
-
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Category</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Unit Price</th>
-      <th scope="col">Total</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let product of products">
-      <td>{{ product.name }}</td>
-      <td>{{ product.category }}</td>
-      <td>{{ product.quantity }}</td>
-      <td>{{ product.unitPrice | currency : "USD" }}</td>
-      <td>{{ calculateTotal(product) | currency : "USD" }}</td>
-      <td>
-        <button class="btn btn-link p-0">
-          <i
-            class="bi bi-pencil-square"
-            (click)="navigateToUpdateProduct(product.id)"
-          ></i>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-11 col-lg-12">
+      <div class="header d-flex justify-content-between align-items-center">
+        <h2 class="fw-bold">Products</h2>
+        <button class="btn btn-success" (click)="navigateToNewProduct()">
+          Create Product
         </button>
-        <button class="btn btn-link p-0 ms-2" style="color: red">
-          <i class="bi bi-trash" (click)="delelteProduct(product.id)"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+      </div>
+      <hr class="mt-2 mb-4" />
 
-<div
-  class="bottom-controls d-flex justify-content-between align-items-center mt-4"
->
-  <div
-    class="rows-per-page d-flex justify-content-start align-items-center w-40"
-  >
-    <label for="rows">Records</label>
-    <input
-      type="number"
-      id="rows"
-      min="1"
-      class="form-control custom-width"
-      placeholder="10"
-    />
-  </div>
-  <div class="pagination d-flex justify-content-start align-items-center pt-3">
-    <ul class="pagination">
-      <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-      <li class="page-item active"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item"><a class="page-link" href="#">Next</a></li>
-    </ul>
+      <div class="search-bar mb-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search products by name..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onProductSearch()"
+        />
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Category</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of productsToDisplay">
+            <td>{{ product.name }}</td>
+            <td>{{ product.category }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.unitPrice | currency : "USD" }}</td>
+            <td>{{ calculateTotal(product) | currency : "USD" }}</td>
+            <td>
+              <button class="btn btn-link p-0">
+                <i
+                  class="bi bi-pencil-square"
+                  (click)="navigateToUpdateProduct(product.id)"
+                ></i>
+              </button>
+              <button class="btn btn-link p-0 ms-2" style="color: red">
+                <i class="bi bi-trash" (click)="deleteProduct(product.id)"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        class="bottom-controls d-flex justify-content-between align-items-center mt-4"
+      >
+        <div
+          class="rows-per-page d-flex justify-content-start align-items-center w-40"
+        >
+          <label for="rows">Records:</label>
+          <input
+            type="number"
+            id="rows"
+            [value]="productRangePerPage"
+            (input)="onProductRangeChange($event)"
+            min="1"
+            class="form-control custom-width"
+            placeholder="10"
+          />
+        </div>
+        <div
+          class="pagination d-flex justify-content-start align-items-center pt-3"
+        >
+          <ul class="pagination">
+            <li
+              class="page-item"
+              [class.disabled]="currentPage === 1"
+              (click)="
+                currentPage > 1 && onPageChange(currentPage - 1);
+                $event.preventDefault()
+              "
+            >
+              <a class="page-link" href="#">&lt;</a>
+            </li>
+            <li
+              class="page-item"
+              [class.active]="currentPage === i + 1"
+              *ngFor="let i of totalPagesArray; let index = index"
+            >
+              <a
+                class="page-link"
+                href="#"
+                (click)="onPageChange(i + 1); $event.preventDefault()"
+                >{{ i + 1 }}</a
+              >
+            </li>
+            <li
+              class="page-item"
+              [class.disabled]="currentPage === totalPages"
+              (click)="
+                currentPage < totalPages && onPageChange(currentPage + 1);
+                $event.preventDefault()
+              "
+            >
+              <a class="page-link" href="#">></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

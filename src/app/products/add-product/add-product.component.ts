@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-product.component.html',
-  styleUrls: ['./add-product.component.css'], // Corrected typo: 'styleUrl' to 'styleUrls'
+  styleUrls: ['./add-product.component.css'],
 })
 export class AddProductComponent implements OnInit {
   categories: string[] = [];
@@ -23,9 +23,12 @@ export class AddProductComponent implements OnInit {
     category: '',
     quantity: 0,
     unitPrice: 0,
-    createdAt: new Date().toISOString(), // Default to today's date
+    createdAt: new Date().toISOString(),
   };
   isEditMode = false;
+  selectedCategory: string = '';
+  newCategory: string = '';
+  isAddingNewCategory: boolean = false;
 
   constructor(
     private productService: ProductService,
@@ -42,6 +45,24 @@ export class AddProductComponent implements OnInit {
         this.loadProduct(params['id']);
       }
     });
+  }
+
+  onCategoryChange(event: any) {
+    if (event.target.value === 'add-new') {
+      this.isAddingNewCategory = true;
+      this.selectedCategory = ''; // Reset selected category
+    } else {
+      this.isAddingNewCategory = false;
+    }
+  }
+
+  addNewCategory() {
+    if (this.newCategory.trim()) {
+      this.categories.push(this.newCategory);
+      this.selectedCategory = this.newCategory; // Automatically select the newly added category
+      this.newCategory = ''; // Reset the new category input
+      this.isAddingNewCategory = false;
+    }
   }
 
   loadProduct(id: string): void {
