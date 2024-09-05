@@ -55,7 +55,8 @@ export class AddProductComponent implements OnInit {
 
   addNewCategory() {
     if (this.newCategory.trim()) {
-      this.categories.push(this.newCategory);
+      this.productService.addCategory(this.newCategory);
+      this.categories = this.productService.getUniqueCategories();
       this.selectedCategory = this.newCategory;
       this.newCategory = '';
       this.isAddingNewCategory = false;
@@ -66,34 +67,43 @@ export class AddProductComponent implements OnInit {
     const product = this.productService.getProductById(id);
     if (product) {
       this.product = { ...product };
-      this.selectedCategory = product.category; // Ensure category is selected properly
+      this.selectedCategory = product.category;
     }
   }
 
   validateCategory(): boolean {
-    if (this.selectedCategory === '*add-new*') {
-      // Allow adding a new category
-      return true;
+    if (this.selectedCategory) {
+      const productCount = this.productService.getProductCountByCategory(
+        this.selectedCategory
+      );
+
+      if (productCount >= 10) {
+        if (
+          this.isEditMode &&
+          this.product?.category === this.selectedCategory
+        ) {
+          this.validationMessage = '';
+          return true;
+        }
+
+        this.validationMessage = `Category ${this.selectedCategory} already has 10 products.`;
+        this.isAddingNewCategory = false;
+        return false;
+      }
     }
 
-    const productCount = this.productService.getProductCountByCategory(
-      this.selectedCategory
-    );
-    if (productCount >= 10) {
-      this.validationMessage = `Category "${this.selectedCategory}" already has 10 products.`;
-      this.isAddingNewCategory = false;
-      return false;
-    }
     this.validationMessage = '';
     return true;
   }
 
   onSubmit(): void {
+    if (!this.validateCategory()) {
+      return;
+    }
     if (this.selectedCategory === '*add-new*') {
       this.selectedCategory = this.newCategory;
     }
-    if (this.selectedCategory === '' || !this.validateCategory()) {
-      // Prevent form submission if the category is invalid or has too many products
+    if (this.selectedCategory === '') {
       this.validationMessage = 'This field is a required field';
       return;
     }

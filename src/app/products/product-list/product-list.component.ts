@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../product.model';
 import { ProductService } from '../product.service';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css',
+  styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
   productList: Product[] = [];
@@ -18,11 +19,21 @@ export class ProductListComponent implements OnInit {
   searchTerm: string = '';
   currentPage: number = 1;
   productRangePerPage: number = 5;
+  private isBrowser: boolean;
 
-  constructor(private productService: ProductService, private router: Router) {}
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
     this.productList = this.productService.getProducts();
+    if (this.isBrowser) {
+      this.loadSettingsFromLocalStorage();
+    }
     this.updateProductsToDisplay();
   }
 
@@ -30,6 +41,9 @@ export class ProductListComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.productRangePerPage;
     const endIndex = startIndex + this.productRangePerPage;
     this.productsToDisplay = this.productList.slice(startIndex, endIndex);
+    if (this.isBrowser) {
+      this.saveSettingsToLocalStorage();
+    }
   }
 
   onProductRangeChange(event: Event): void {
@@ -114,5 +128,32 @@ export class ProductListComponent implements OnInit {
       (total, product) => total + product.unitPrice * product.quantity,
       0
     );
+  }
+
+  private saveSettingsToLocalStorage(): void {
+    if (this.isBrowser) {
+      localStorage.setItem(
+        'productRangePerPage',
+        JSON.stringify(this.productRangePerPage)
+      );
+      localStorage.setItem('currentPage', JSON.stringify(this.currentPage));
+    }
+  }
+
+  private loadSettingsFromLocalStorage(): void {
+    if (this.isBrowser) {
+      const savedProductRangePerPage = localStorage.getItem(
+        'productRangePerPage'
+      );
+      const savedCurrentPage = localStorage.getItem('currentPage');
+
+      if (savedProductRangePerPage) {
+        this.productRangePerPage = JSON.parse(savedProductRangePerPage);
+      }
+
+      if (savedCurrentPage) {
+        this.currentPage = JSON.parse(savedCurrentPage);
+      }
+    }
   }
 }
