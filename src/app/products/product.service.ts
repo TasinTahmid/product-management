@@ -52,6 +52,51 @@ export class ProductService {
       description: 'Versatile resistance bands for strength training.',
       createdAt: '2024-09-03T16:30:00.168Z',
     },
+    {
+      id: '208b4a8d-bb61-4023-b5d6-5ab960cb8a77',
+      name: 'Yoga Mat',
+      category: 'Fitness and Health',
+      quantity: 10,
+      unitPrice: 20.99,
+      description: 'A comfortable and durable yoga mat.',
+      createdAt: '2024-08-03T15:34:19.168Z',
+    },
+    {
+      id: '36e9c342-2b76-43f6-9a6e-1f9c939c1e4f',
+      name: 'Dumbbell Set',
+      category: 'Fitness and Health',
+      quantity: 5,
+      unitPrice: 50.0,
+      description: 'A set of dumbbells for strength training.',
+      createdAt: '2024-08-03T15:45:00.168Z',
+    },
+    {
+      id: '1cbd0b0a-dff7-4c8a-905d-8a176f08a8ad',
+      name: 'Treadmill',
+      category: 'Fitness and Health',
+      quantity: 2,
+      unitPrice: 499.99,
+      description: 'A high-quality treadmill for home workouts.',
+      createdAt: '2024-09-03T16:00:00.168Z',
+    },
+    {
+      id: '7d945c2a-54b8-4f3b-8f5d-d9f4a08e4a9f',
+      name: 'Protein Powder',
+      category: 'Fitness and Health',
+      quantity: 15,
+      unitPrice: 29.99,
+      description: 'Premium protein powder for muscle recovery.',
+      createdAt: '2024-09-03T16:15:00.168Z',
+    },
+    {
+      id: '5d2e4622-46f4-49a6-853a-1ea95f4f27b4',
+      name: 'Resistance Bands',
+      category: 'Fitness and Health',
+      quantity: 20,
+      unitPrice: 14.99,
+      description: 'Versatile resistance bands for strength training.',
+      createdAt: '2024-09-03T16:30:00.168Z',
+    },
 
     // Super Food
     {
@@ -225,6 +270,7 @@ export class ProductService {
   getProductByName(name: string): Product | undefined {
     return this.products.find((product) => product.name === name);
   }
+
   getUniqueCategories(): string[] {
     const categories = this.products.map((product) => product.category);
     return Array.from(new Set(categories));
@@ -253,5 +299,11 @@ export class ProductService {
   // Delete a product by ID
   deleteProduct(id: string): void {
     this.products = this.products.filter((product) => product.id !== id);
+  }
+
+  // Get the number of products in a given category
+  getProductCountByCategory(category: string): number {
+    return this.products.filter((product) => product.category === category)
+      .length;
   }
 }

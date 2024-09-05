@@ -7,10 +7,10 @@
         </h3>
       </div>
 
-      <form class="mt-4" (ngSubmit)="onSubmit()">
+      <form #productForm="ngForm" class="mt-4" (ngSubmit)="onSubmit()">
         <!-- Name Input -->
         <div class="mb-3">
-          <label for="productName" class="form-label">Name</label>
+          <label for="productName" class="form-label required">Name</label>
           <input
             type="text"
             class="form-control"
@@ -18,12 +18,24 @@
             placeholder="Enter product name"
             [(ngModel)]="product.name"
             name="name"
+            #name="ngModel"
+            required
           />
+          <div
+            *ngIf="name.invalid && (name.dirty || name.touched)"
+            class="text-danger"
+          >
+            <div *ngIf="name.errors?.['required']">
+              Product name is required.
+            </div>
+          </div>
         </div>
 
         <!-- Description Text Area -->
         <div class="mb-3">
-          <label for="productDescription" class="form-label">Description</label>
+          <label for="productDescription" class="form-label required"
+            >Description</label
+          >
           <textarea
             class="form-control"
             id="productDescription"
@@ -31,24 +43,40 @@
             placeholder="Enter product description"
             [(ngModel)]="product.description"
             name="description"
+            #description="ngModel"
+            required
           ></textarea>
+          <div
+            *ngIf="
+              description.invalid && (description.dirty || description.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="description.errors?.['required']">
+              Product description is required.
+            </div>
+          </div>
         </div>
 
         <!-- Category Dropdown -->
         <div class="mb-3">
-          <label for="productCategory" class="form-label">Category</label>
+          <label for="productCategory" class="form-label required"
+            >Category</label
+          >
           <select
             class="form-select"
             id="productCategory"
             [(ngModel)]="selectedCategory"
             (change)="onCategoryChange($event)"
             name="category"
+            #category="ngModel"
+            required
           >
-            <option selected [ngValue]="''">Select a category</option>
+            <option value="" disabled>Select a category</option>
             <option *ngFor="let category of categories" [value]="category">
               {{ category }}
             </option>
-            <option value="add-new">Add New Category</option>
+            <option value="*add-new*">Add New Category</option>
           </select>
         </div>
         <div *ngIf="isAddingNewCategory" class="mt-3">
@@ -71,11 +99,16 @@
               </button>
             </div>
           </div>
+          <div *ngIf="validationMessage" class="text-danger mt-3">
+            {{ validationMessage }}
+          </div>
         </div>
 
         <!-- Quantity Number Input -->
         <div class="mb-3">
-          <label for="productQuantity" class="form-label">Quantity</label>
+          <label for="productQuantity" class="form-label required"
+            >Quantity</label
+          >
           <input
             type="number"
             class="form-control"
@@ -83,12 +116,28 @@
             placeholder="Enter quantity"
             [(ngModel)]="product.quantity"
             name="quantity"
+            #quantity="ngModel"
+            required
+            min="0"
           />
+          <div
+            *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)"
+            class="text-danger"
+          >
+            <div *ngIf="quantity.errors?.['required']">
+              Quantity is required.
+            </div>
+            <div *ngIf="quantity.errors?.['min']">
+              Quantity must be at least 1.
+            </div>
+          </div>
         </div>
 
         <!-- Unit Price Number Input -->
         <div class="mb-3">
-          <label for="productUnitPrice" class="form-label">Unit Price</label>
+          <label for="productUnitPrice" class="form-label required"
+            >Unit Price</label
+          >
           <input
             type="number"
             step="0.01"
@@ -97,25 +146,56 @@
             placeholder="Enter unit price"
             [(ngModel)]="product.unitPrice"
             name="unitPrice"
+            #unitPrice="ngModel"
+            required
+            min="0.00"
           />
+          <div
+            *ngIf="unitPrice.invalid && (unitPrice.dirty || unitPrice.touched)"
+            class="text-danger"
+          >
+            <div *ngIf="unitPrice.errors?.['required']">
+              Unit price is required.
+            </div>
+            <div *ngIf="unitPrice.errors?.['min']">
+              Unit price must be at least 0.01.
+            </div>
+          </div>
         </div>
 
         <!-- Create Date Input -->
         <div class="mb-3">
-          <label for="productCreateDate" class="form-label">Create Date</label>
+          <label for="productCreateDate" class="form-label required"
+            >Create Date</label
+          >
           <input
             type="date"
             class="form-control"
             id="productCreateDate"
             [(ngModel)]="formattedCreateDate"
             name="createdAt"
+            #createdAt="ngModel"
+            required
           />
+          <div
+            *ngIf="createdAt.invalid && (createdAt.dirty || createdAt.touched)"
+            class="text-danger"
+          >
+            <div *ngIf="createdAt.errors?.['required']">
+              Create date is required.
+            </div>
+          </div>
         </div>
 
         <!-- Submit Button -->
         <hr class="mt-2 mb-4" />
         <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            (click)="onSubmit()"
+            [disabled]="productForm.invalid"
+          >
             {{ isEditMode ? "Update Product" : "Create Product" }}
           </button>
         </div>

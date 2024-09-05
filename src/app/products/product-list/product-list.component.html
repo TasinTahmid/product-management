@@ -52,8 +52,14 @@
         </tbody>
       </table>
 
+      <div class="d-flex justify-content-between align-items-center mt-2">
+        <div class="total-price">
+          <h5>Total Price: {{ getTotalPrice() | currency : "USD" }}</h5>
+        </div>
+      </div>
+
       <div
-        class="bottom-controls d-flex justify-content-between align-items-center mt-4"
+        class="bottom-controls d-flex justify-content-between align-items-center mt-2"
       >
         <div
           class="rows-per-page d-flex justify-content-start align-items-center w-40"

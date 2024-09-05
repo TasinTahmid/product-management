@@ -108,4 +108,11 @@ export class ProductListComponent implements OnInit {
     this.productList = this.productService.getProducts();
     this.updateProductsToDisplay();
   }
+
+  getTotalPrice(): number {
+    return this.productsToDisplay.reduce(
+      (total, product) => total + product.unitPrice * product.quantity,
+      0
+    );
+  }
 }
