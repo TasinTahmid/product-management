@@ -1,0 +1,15 @@
+.new-category-input {
+  border: 1px solid #ced4da;
+  box-shadow: none;
+}
+
+/* Remove the outline (border) when the input is focused */
+.new-category-input:focus {
+  outline: none;
+  border: 1px solid #007bff;
+  box-shadow: none;
+}
+.new-category-button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

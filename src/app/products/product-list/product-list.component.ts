@@ -27,14 +27,8 @@ export class ProductListComponent implements OnInit {
   }
 
   updateProductsToDisplay(): void {
-    // let filteredProducts = this.products.filter((product) =>
-    //   product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-    // );
     const startIndex = (this.currentPage - 1) * this.productRangePerPage;
     const endIndex = startIndex + this.productRangePerPage;
-
-    // const safeProductRange = Math.min(this.productRangePerPage, this.products.length);
-
     this.productsToDisplay = this.productList.slice(startIndex, endIndex);
   }
 
@@ -47,6 +41,7 @@ export class ProductListComponent implements OnInit {
     this.currentPage = 1;
     this.updateProductsToDisplay();
   }
+
   onPageChange(newPage: number): void {
     this.currentPage = newPage;
     this.updateProductsToDisplay();
@@ -67,10 +62,33 @@ export class ProductListComponent implements OnInit {
     return Math.ceil(this.productList.length / this.productRangePerPage);
   }
 
-  get totalPagesArray(): number[] {
-    return Array(this.totalPages)
-      .fill(0)
-      .map((_, i) => i);
+  get visiblePages(): number[] {
+    const visiblePages = [];
+    const total = this.totalPages;
+
+    if (total <= 7) {
+      return Array.from({ length: total }, (_, i) => i + 1);
+    }
+
+    visiblePages.push(1);
+
+    if (this.currentPage > 4) {
+      visiblePages.push(-1);
+    }
+
+    for (let i = this.currentPage - 1; i <= this.currentPage + 1; i++) {
+      if (i > 1 && i < total) {
+        visiblePages.push(i);
+      }
+    }
+
+    if (this.currentPage < total - 3) {
+      visiblePages.push(-1);
+    }
+
+    visiblePages.push(total);
+
+    return visiblePages;
   }
 
   calculateTotal(product: Product): number {
@@ -88,5 +106,6 @@ export class ProductListComponent implements OnInit {
   deleteProduct(id: string): void {
     this.productService.deleteProduct(id);
     this.productList = this.productService.getProducts();
+    this.updateProductsToDisplay();
   }
 }

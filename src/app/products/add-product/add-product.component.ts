@@ -16,19 +16,19 @@ import { v4 as uuidv4 } from 'uuid';
 })
 export class AddProductComponent implements OnInit {
   categories: string[] = [];
-  product: Product = {
-    id: uuidv4(),
-    name: '',
-    description: '',
-    category: '',
-    quantity: 0,
-    unitPrice: 0,
-    createdAt: new Date().toISOString(),
-  };
   isEditMode = false;
   selectedCategory: string = '';
   newCategory: string = '';
   isAddingNewCategory: boolean = false;
+  product: Product = {
+    id: uuidv4(),
+    name: '',
+    description: '',
+    category: this.selectedCategory,
+    quantity: 0,
+    unitPrice: 0,
+    createdAt: new Date().toISOString(),
+  };
 
   constructor(
     private productService: ProductService,
@@ -47,20 +47,21 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  onCategoryChange(event: any) {
-    if (event.target.value === 'add-new') {
+  onCategoryChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    if (selectElement.value === 'add-new') {
       this.isAddingNewCategory = true;
-      this.selectedCategory = ''; // Reset selected category
     } else {
       this.isAddingNewCategory = false;
+      this.selectedCategory = selectElement.value;
     }
   }
 
   addNewCategory() {
     if (this.newCategory.trim()) {
       this.categories.push(this.newCategory);
-      this.selectedCategory = this.newCategory; // Automatically select the newly added category
-      this.newCategory = ''; // Reset the new category input
+      this.selectedCategory = this.newCategory;
+      this.newCategory = '';
       this.isAddingNewCategory = false;
     }
   }
@@ -73,10 +74,11 @@ export class AddProductComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const productValue = { ...this.product, category: this.selectedCategory };
     if (this.isEditMode) {
-      this.productService.updateProduct(this.product);
+      this.productService.updateProduct(productValue);
     } else {
-      this.productService.addProduct(this.product);
+      this.productService.addProduct(productValue);
     }
     this.navigateToProductList();
   }
